@@ -1,0 +1,34 @@
+.game-quit-button {
+  background-color: #ff6868;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+  &:hover {
+    background-color: #f74f4f;
+  }
+
+  p {
+    padding: 20px;
+    @include font(18, 18);
+    font-weight: bold;
+    color: #fff;
+
+    &:nth-child(1) {
+      display: none;
+    }
+
+    @include tablet {
+      &:nth-child(1) {
+        display: block;
+      }
+      &:nth-child(2) {
+        display: none;
+      }
+    }
+  }
+}

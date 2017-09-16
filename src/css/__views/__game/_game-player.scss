@@ -1,0 +1,112 @@
+.game-player {
+  position: absolute;
+  width: 46%;
+  height: 46%;
+  border: solid 1px #a2a2a2;
+  top: 30%;
+  background-repeat: no-repeat;
+  background-size: 40%;
+  background-position: center;
+  -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+  &.player-1 {
+    left: 2%;
+  }
+
+  &.player-2 {
+    right: 2%;
+  }
+
+  @include desktop {
+    width: 35%;
+    height: 40%;
+    top: 20%;
+
+    &.player-1 {
+      left: 5%;
+    }
+
+    &.player-2 {
+      right: 5%;
+    }
+  };
+
+  @include lg-desktop {
+    width: 30%;
+    height: 40%;
+    top: 20%;
+
+    &.player-1 {
+      left: 10%;
+    }
+
+    &.player-2 {
+      right: 10%;
+    }
+  };
+
+  @include xlg-desktop {
+    width: 25%;
+    height: 40%;
+    top: 20%;
+
+    &.player-1 {
+      left: 15%;
+    }
+
+    &.player-2 {
+      right: 15%;
+    }
+  };
+
+  &__score {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    span {
+      width: 30px;
+      height: 30px;
+      border-radius: 100%;
+      background-color: #CCC;
+      display: inline-block;
+      margin: 5px 0 0 5px;
+      transition: all 0.2s ease-in-out;
+      -webkit-transform: scale(0.6);
+          -ms-transform: scale(0.6);
+              transform: scale(0.6);
+      -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+      -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+      &.highlight {
+        background-color: #ffcb6a;
+        -webkit-transform: scale(1);
+            -ms-transform: scale(1);
+                transform: scale(1);
+      }
+    }
+  }
+
+  &__name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    text-align: center;
+    background-color: rgba(0,0,0,0.6);
+
+    span {
+      padding: 5% 0;
+      display: block;
+      color: #fff;
+      &::first-letter {
+         text-transform:uppercase;
+      }
+    }
+  }
+}

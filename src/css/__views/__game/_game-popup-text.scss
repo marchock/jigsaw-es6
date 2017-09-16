@@ -1,0 +1,25 @@
+.game-popup-text {
+  position: absolute;
+  top: 15%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+
+  @include desktop {
+    top: 28%;
+    left: 50%;
+    width: 200px;
+    margin-left: -100px;
+  }
+
+  > h3 {
+    &::first-letter {
+       text-transform:uppercase;
+    }
+
+    -webkit-animation: POP-ANIMATION 0.5s forwards; /* Safari 4+ */
+    -moz-animation:    POP-ANIMATION 0.5s forwards; /* Fx 5+ */
+    -o-animation:      POP-ANIMATION 0.5s forwards; /* Opera 12+ */
+    animation:         POP-ANIMATION 0.5s forwards; /* IE 10+, Fx 29+ */
+  }
+}

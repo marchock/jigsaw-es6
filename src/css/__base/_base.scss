@@ -1,0 +1,114 @@
+/**
+ * This is for the remaining base/globally applied styles that cannot be defined in the other Base folder stylesheets (e.g. colours, fonts etc.)
+ *
+ * @group css.base.base
+ *
+ * ## Usage
+ * Import into your main file using
+ *
+ * @example
+ *     @import "__base/base";
+ *
+ */
+
+/**
+ * Custom Resets
+ */
+p, pre, blockquote, a, ul, ol, li, h1, h2, h3, h4, h5, h6, figure, fieldset {
+    margin:0;
+    padding:0;
+}
+
+/**
+ * Global Styles
+ */
+body {
+
+}
+
+iframe {
+  border: 0;
+  max-width: 100%;
+}
+
+/**
+* Fix the box sizing
+*/
+
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+
+/* CONTAINER
+************************************/
+.container {
+    max-width: 1440px;
+    position: relative;
+    margin: auto;
+    overflow-x: hidden;
+}
+
+/* BUTTON
+************************************/
+.load-more {
+    text-align: center;
+    cursor: pointer;
+}
+
+/* FORM
+************************************/
+.json-form {
+    text-align: center;
+    padding: 20px;
+}
+
+
+/* JIGSAW STYLES
+************************************/
+.jigsaw {
+    width: 1400px;
+    height: 400px;
+    background-color: #FEFEFE;
+    margin: auto;
+    position: relative;
+    -webkit-transform: translate3d(0,0,0);
+    /*overflow: hidden;*/
+}
+
+.jigsaw > div,
+.jigsaw > a {
+    float: left;
+    position: absolute;
+    font-size: 20px;
+    font-family: arial;
+    opacity: 1;
+    background-color: #DDD;
+    display: none;
+
+}
+
+.jigsaw > div:hover,
+.jigsaw > a:hover {
+    opacity: 0.8;
+}
+
+.jigsaw .item.animate {
+    -webkit-transition: opacity 0.5s;
+    opacity: 0;
+    /*-webkit-transform: translate3d(0, 5000px, 0);*/
+}
+
+.jigsaw .item.animate.start {
+    opacity: 1;
+    /*-webkit-transform: translate3d(0, 0px, 0);*/
+}

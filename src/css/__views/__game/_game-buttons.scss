@@ -1,0 +1,77 @@
+.game-buttons {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  cursor: pointer;
+  transition: all 0.4s linear;
+
+  &.disabled {
+    opacity: 0.3;
+    cursor: default;
+    p {
+      &:hover {
+        background-color: #aac2e0;
+        color: inherit;
+      }
+    }
+  }
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
+
+  span {
+    display: none;
+    &::first-letter {
+       text-transform:uppercase;
+    }
+  }
+
+  @include tablet {
+    img {
+      width: 30px;
+      height: 30px;
+    }
+
+    span {
+      position: relative;
+      top: -6px;
+      margin-left: 5px;
+      display: inline-block;
+    }
+  }
+
+  @include desktop {
+    bottom: 10%;
+  }
+
+  > div {
+    width: 33.3%;
+    height: 100%;
+    float: left;
+  }
+
+  p {
+    width: 80%;
+    margin: 0 auto;
+    background-color: #aac2e0;
+    text-align: center;
+    height: 100%;
+    padding: 10% 0;
+    @include font(18, 18);
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    -moz-box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+    &:hover {
+      background-color: #4D575B;
+      color: #fff;
+    }
+
+    @include tablet {
+      padding: 5% 0;
+    }
+  }
+}

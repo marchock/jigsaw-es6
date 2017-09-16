@@ -1,0 +1,138 @@
+/**
+ * Fonts
+ * @group css.base.fonts
+ */
+
+
+// ------------------------------------------------
+// Font Variables
+// ------------------------------------------------
+
+/**
+ * @group css.base.fonts
+ * @param {string} $font-arial
+ */
+// $font-arial: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+// $font-nspcc: 'NSPCC', Arial, 'Helvetica Neue', Helvetica, sans-serif;
+
+
+// ------------------------------------------------
+// Global Font Styles
+// ------------------------------------------------
+
+// Font Sizing
+html {
+    font-size: 62.5%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    @include font(16, 21);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+}
+
+// Heading Styles
+h1 {
+    @include font(20, 28);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+
+    @include tablet {
+        @include font(30, 38);
+    }
+
+    @include desktop {
+        @include font(40, 48);
+    }
+}
+
+h2 {
+    @include font(20, 28);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+
+    @include tablet {
+        @include font(30, 38);
+    }
+
+    @include desktop {
+        @include font(40, 48);
+    }
+}
+
+h3 {
+    @include font(20, 28);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+
+    @include tablet {
+        @include font(25, 33);
+    }
+
+    @include desktop {
+        @include font(30, 38);
+    }
+}
+
+p,
+li,
+a {
+    @include font(16, 21);
+    letter-spacing: 0.01em;
+
+/*
+    @include mq($from: tablet) {
+        @include font(15, 19);
+    }
+
+    @include mq($from: smalldesktop) {
+        @include font(16, 20);
+    }
+*/
+}
+
+a {
+    @include font(16, 21);
+    transition: color $transition-hover-speed $transition-hover-easing;
+    text-decoration: none;
+}
+
+// Font Animations
+h1,
+h2,
+h3,
+h4,
+p,
+li,
+span {
+    transition: font $transition-hover-speed $transition-hover-easing;
+}
+
+// Better font rendering
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li,
+a,
+span,
+input,
+label,
+textarea,
+time,
+button,
+address {
+    @include anti-alias-text;
+    -ms-hyphens: none;
+    -ms-word-break: normal;
+}
+
+p strong,
+li strong {
+    font-weight: 700;
+}

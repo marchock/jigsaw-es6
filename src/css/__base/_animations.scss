@@ -1,0 +1,51 @@
+/**
+ * Animations
+ * Shared animations styles, these work in conjunction with ngAnimate
+ * We also declare Keyframe animations here
+ * @group css.base.animations
+ */
+
+
+/* Keyframes */
+@-webkit-keyframes POP-ANIMATION {
+  0%, 10% { -webkit-transform: scale(0); }
+  80%   { -webkit-transform: scale(1.1); }
+  90%   { -webkit-transform: scale(0.9); }
+  100% { -webkit-transform: scale(1); }
+}
+@-moz-keyframes POP-ANIMATION {
+  0%, 10% { transform: scale(0); }
+  80%   { transform: scale(1.1); }
+  90%   { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+@-o-keyframes POP-ANIMATION {
+  0%, 10% { transform: scale(0); }
+  80%   { transform: scale(1.1); }
+  90%   { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+@keyframes POP-ANIMATION {
+  0%, 10% { transform: scale(0); }
+  80%   { transform: scale(1.1); }
+  90%   { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+
+@-webkit-keyframes FADE-IN {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-moz-keyframes FADE-IN {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-o-keyframes FADE-IN {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes FADE-IN {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
