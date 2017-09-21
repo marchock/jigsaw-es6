@@ -6,37 +6,48 @@
 import Elements from './elements';
 import Tiles from './tiles';
 import Utils from './utils';
-import Grid from './grid';
+import OptionHTML from './OptionHTML';
+
+
+
 
 class BrowserResize {
-
-  constructor(store) {
-    store.container.minWidth = BrowserResize.findSmallestBreakpointPosition(store);
-    store.breakpoints.list = BrowserResize.createBreakPointList(store);
-    window.addEventListener('resize', BrowserResize.update.bind(null, store));
-    setTimeout(() => {BrowserResize.update(store);}, 300);
-  }
 
   /* This is triggered by browser resize event.
    * Finds the container width and breakpoint index
    *
    *
    * @param {Object} - store
-   * @param {Number} - MIN_CONTAINER_WIDTH
+   * @param {Object} - BrowserResize
    * @return {void}
    */
-  static update(store) {
-    const { getWidth, findBreakPointListIndex } = BrowserResize;
-    store.container.width = getWidth(Elements.getContainerWidth, store);
-    store.breakpoints.index = findBreakPointListIndex(store);
-    store.maxGridColumns = Utils.calNumberOfColumns(store);
-    store.tile = Tiles.updateTileParam(store);
-    store.rebuildAllTiles = true;
-    store.tiles = Tiles.reset(store.tiles);
-    store.grid = Grid.reset();
+  static init(store, BrowserResize) {
+    const { getWidth, findBreakPointListIndex, findSmallestBreakpointPosition, createBreakPointList } = BrowserResize;
+    store.container.minWidth = findSmallestBreakpointPosition(store);
+    store.breakpoints.list = createBreakPointList(store);
 
-    // Trigger for a new render
-    Tiles.build(store);
+    return () => {
+      store.container.width = getWidth(Elements.getContainerWidth, store);
+      store.breakpoints.index = findBreakPointListIndex(store);
+      store.maxGridColumns = Utils.calNumberOfColumns(store);
+      store.tile = Tiles.updateTileParam(store);
+      store.rebuildAllTiles = true;
+      store.tiles = Tiles.reset(store.tiles);
+
+
+
+
+      // jigStore.dispatch(UPDATE_CONTAINER_WIDTH);
+      // jigStore.dispatch(GET_BREAKPOINTS_LIST_INDEX);
+      // jigStore.dispatch(GET_MAX_GRID_COLUMNS);
+      // jigStore.dispatch(UPDATE_TILE_PARAM);
+      // jigStore.dispatch(UPDATE_REBUILD_ALL_TILES, false);
+      // jigStore.dispatch(RESET_TILES_ARRAY);
+      // jigStore.dispatch(RESET_GRID);
+
+      // Trigger for a new render
+      OptionHTML.update(store);
+    }
   }
 
   // Return a list of breakpoint positions
@@ -61,6 +72,20 @@ class BrowserResize {
     }, []);
   }
 
+  /* Find a breakpoint in the array that the container width is within the
+ * boundary and return an index
+ * @return {number}
+ */
+  static findBreakPointListIndex({breakpoints, container}) {
+    return breakpoints.list
+      .reduce((accumulator, breakpoint, index) =>
+          (breakpoint[1] >= container.width && breakpoint[0] < container.width)
+            ? (accumulator = index)
+            : accumulator,
+        0);
+  }
+
+
   /* Return container width no smaller than the smallest breakpoint position
    * @return {number}
    */
@@ -82,18 +107,6 @@ class BrowserResize {
         store.container.maxWidth
       );
   }
-
-  /* Find a breakpoint in the array that the container width is within the
-   * boundary and return an index
-   * @return {number}
-   */
-  static findBreakPointListIndex({breakpoints, container}) {
-    return breakpoints.list
-      .reduce((accumulator, breakpoint, index) =>
-        (breakpoint[1] >= container.width && breakpoint[0] < container.width)
-          ? (accumulator = index)
-          : accumulator,
-      0);
-  }
 }
+
 export default BrowserResize;

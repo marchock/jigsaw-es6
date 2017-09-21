@@ -2,8 +2,7 @@
 
 export default class Utils {
 
-  // store.tile.padding, showGutter, store.maxGridColumns
-  static calPadding({ settings, tile, maxGridColumns}) {
+  static calPadding({ settings, tile,}, maxGridColumns) {
     return settings.showGutter ? (tile.padding / 2) : (tile.padding / maxGridColumns);
   }
 
@@ -122,5 +121,5 @@ export {
   getComputedStyle,
   addClass,
   removeClass,
-  getData
+  getData,
 };

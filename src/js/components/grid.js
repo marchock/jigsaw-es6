@@ -26,6 +26,12 @@ export const GridSetup = () => {
       return this;
     },
 
+    pointIsEmpty(callback) {
+      if (!array[row][column]) {
+        return callback(this.hasSpaceFor.bind(this));
+      }
+    },
+
     next(index) {
       if (column < (store.maxGridColumns - 1)) {
         column += 1;
@@ -74,7 +80,7 @@ export const GridSetup = () => {
     },
 
     getMaxRows() {
-      return maxGridRows;
+      return array.length;
     },
 
     createColumns(columns) {
@@ -89,8 +95,8 @@ export const GridSetup = () => {
       return array[row];
     },
 
-    update(tc) {
-      const { width, height } = store.tiles[tc];
+    update(tile) {
+      const { width, height } = tile;
 
       for (let i = 0; i < height; i += 1) {
         for (let ii = 0; ii < width; ii += 1) {
@@ -105,9 +111,8 @@ export const GridSetup = () => {
       }
     },
 
-    hasSpace(tc) {
-      const { tiles } = store;
-      const { width, height } = tiles[tc];
+    hasSpaceFor(tile) {
+      const { width, height } = tile;
       let spaceAvailable = 0;
 
       for (let i = 0; i < height; i += 1) {
@@ -126,20 +131,24 @@ export const GridSetup = () => {
           }
         }
       }
+
+      if (!spaceAvailable) {
+        this.update(tile);
+      }
       return !spaceAvailable;
     },
-
 
     addNewRow() {
       array[array.length] = this.createColumns(maxGridColumns);
     },
 
-    removeEmptyRows() {
+    removeEmptyRows(func) {
       const newArray = array.filter((col) => {
         return col.find((boolean => boolean));
       });
-      maxGridRows = newArray.length;
+
       array = [ ...newArray ];
+      func(array.length);
     }
   }
 };

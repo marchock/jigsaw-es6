@@ -12,6 +12,8 @@ class Elements {
     // pass body element through settings to be able to test
     this.$body = document.getElementsByTagName("body")[0];
     this.$container = this.$body.querySelector(container);
+
+    // TODO: this not in use
     this.$parent = this.$container.querySelector(jigsaw);
     this.$children = this.$parent.querySelectorAll(tiles);
 
@@ -36,70 +38,59 @@ class Elements {
     this.$container.parentNode.insertBefore(this.$btnLoadMore, this.$container.nextSibling);
   }
 
-  getChildren() {
-    return this.$children;
-  }
+  /* Update container element height
+   *
+   * @param: {object} - store : {{object} - element}
+   *
+   * @return: {VOID}
+   * */
+  static updateContainerHeight({elements, settings, tile}, gridMaxRows) {
+    const { showGutter, modifyTileHeight } = settings;
+    const maxRows = gridMaxRows;
+    const height = showGutter
+      ? (maxRows * modifyTileHeight)
+      : ((maxRows * modifyTileHeight) - tile.padding);
 
-  show(string) {
-    switch (string) {
-      case "loadMore":
-        if (this.settings.load.btn) this.$btnLoadMore.style.display = "block";
-        break;
-    }
-  }
-
-  hide(string) {
-    switch (string) {
-
-      case "loadMore":
-        if (this.settings.load.btn) this.$btnLoadMore.style.display = "none";
-        break;
-    }
-  }
-
-  createHTMLElements(data) {
-    var i = 0;
-
-    if (data) {
-      this.cachedData = data;
-      this.removeChildren();
-    }
-
-    for (i = this.settings.startLoop; i < this.settings.stopPoint; i += 1) {
-      this.settings.tileTemplate(this.cachedData[i], this.$parent);
-    }
-    this.updateChildren();
-  }
-
-  updateChildren() {
-    this.$children = this.$parent.querySelectorAll("." + this.settings.classnames.tiles);
-  }
-
-  removeChildren() {
-    this.$parent.innerHTML = "";
-  }
-
-
-  static updateContainerHeight({elements}, height) {
     if (elements) {
       elements.$container.style.height = `${height}px`;
     }
   }
 
+  /* Get container width
+   *
+   * @param: {object} - store
+   *
+   * @return: {number}
+   * */
   static getContainerWidth(store) {
     return (store.elements.$container)
       ? getComputedStyle(store.elements.$container)
       : getComputedStyle(store.elements.$body);
   }
 
-
+  /* Resize tiles width to fill the remaining space of the container
+   *
+   * @param: {number} - containerWidth
+   * @param: {number} - tileWidth
+   * @param: {number} - maxGridColumns
+   * @param: {number} - padding
+   *
+   * @return: {number}
+   * */
   static tileResize(containerWidth, tileWidth, maxGridColumns, padding) {
     return (tileWidth > containerWidth)
         ? (tileWidth * maxGridColumns) - padding
         : tileWidth;
   }
 
-  static getTileElements(store) {
+
+  /* Update tile element with updated parameters
+   *
+   * @param: {object} - store
+   *
+   * @return: {VOID}
+   * */
+  static renderTiles(store) {
 
     let { startLoop, load } = store.settings;
     const containerWidth = Elements.getContainerWidth(store);
@@ -124,6 +115,11 @@ class Elements {
     }
   }
 
+
+  /* Hide load more button
+   *
+   * @return: {VOID}
+   * */
   static hideButton() {
     document.querySelector('.load-more').style.display = "none";
   }

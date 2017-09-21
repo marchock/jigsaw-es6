@@ -42,7 +42,7 @@ new Jigsaw({
       tile: {
         width: 200,
         height: 180,
-        padding: 18
+        padding: 20
       }
     }
   ],
