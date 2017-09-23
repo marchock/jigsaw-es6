@@ -1,13 +1,11 @@
-import { getComputedStyle, addClass } from './utils';
-import Tiles from './tiles';
+import OptionHTML from './OptionHTML';
 
 class Elements {
-  constructor(store, animations) {
+  constructor(store) {
 
     const { container, jigsaw, tiles } = store.settings.classnames;
 
     this.settings = store.settings;
-    this.animations = animations;
 
     // pass body element through settings to be able to test
     this.$body = document.getElementsByTagName("body")[0];
@@ -15,7 +13,7 @@ class Elements {
 
     // TODO: this not in use
     this.$parent = this.$container.querySelector(jigsaw);
-    this.$children = this.$parent.querySelectorAll(tiles);
+    this.$children = [...this.$parent.querySelectorAll(tiles)];
 
     this.initLoadBtn(store);
   }
@@ -28,7 +26,7 @@ class Elements {
     this.t = document.createTextNode("Load More");
     this.$btnLoadMore.appendChild(this.t);
     this.$btnLoadMore.setAttribute("class", "load-more");
-    this.$btnLoadMore.addEventListener('click', Tiles.addMore.bind(null, store));
+    this.$btnLoadMore.addEventListener('click', OptionHTML.addMore.bind(null, store));
 
     if (this.settings.load.animate && !this.settings.load.framerate) {
       //setDefault value
@@ -127,3 +125,29 @@ class Elements {
 }
 
 export default Elements;
+
+
+
+const getComputedStyle = (ele) => {
+  const comStyle = document.defaultView.getComputedStyle(ele, "");
+  // parseInt removes the "px" at the end and converts to a number
+  return parseInt(comStyle.getPropertyValue("width"), 10);
+};
+
+
+const hasClass = (ele, cls) => {
+  return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
+};
+
+const addClass = (ele, cls) => {
+  if (!hasClass(ele, cls)) {
+    ele.className += " " + cls;
+  }
+};
+
+// const removeClass = (ele, cls) => {
+//   if (hasClass(ele, cls)) {
+//     var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');
+//     ele.className = ele.className.replace(reg, ' ');
+//   }
+// };

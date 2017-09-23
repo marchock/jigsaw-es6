@@ -1,29 +1,37 @@
 import Elements from './elements';
-import Tiles from './tiles';
-import BrowserResize from './browser-resize';
-import Animations from './animations';
-import Utils from './utils';
+
 import Store from './Store';
 import {GridSetup} from './grid';
+import {browserResize} from './browser-resize';
+import {Tiles} from './tiles';
 
+const store = Store;
 const grid = GridSetup();
+const tiles = Tiles(grid);
 
 class OptionHTML {
 
   constructor(settings) {
-    const store = Store;
-    store.settings = settings;
-    store.elements = new Elements(store, new Animations(store));
-    store.tiles = Tiles.buildArray(store);
-    store.stopPoint = Utils.updateStopPoint(store);
+    OptionHTML.updateStore(settings);
+  }
 
-    const update = BrowserResize.init(store, BrowserResize);
+  static updateStore(settings) {
+    store.settings = settings;
+    store.elements = new Elements(store);
+    store.tiles = tiles.createTileArray(store);
+    store.stopPoint = OptionHTML.updateStopPoint(store);
+
+    OptionHTML.event();
+  }
+
+  static event() {
+    const update = browserResize(store);
     window.addEventListener('resize', () => update());
     setTimeout(() => {update();}, 300);
   }
 
   static update(store) {
-    store.tilesLength = Tiles.calTotalNumber(store);
+    tiles.reset(store);
     grid.setup(store);
     OptionHTML.jigsawEngine(store);
   }
@@ -35,29 +43,29 @@ class OptionHTML {
    *  @return: VOID
    * */
   static jigsawEngine(store) {
-
-    let tc = 0;
-
     /*
      * Loop through grid to find an empty point.
      */
     for (let i = 0; i < store.tilesLength; i += 1) {
 
-      const tile = store.tiles[tc];
+      grid.pointIsEmpty(tiles.addTile(store));
 
-      grid.pointIsEmpty((hasSpaceFor) => {
-        if (!tile.created) {
-          if (hasSpaceFor(tile)) {
-            store.tiles[tc] = Tiles.updateTile(store, tc, grid);
-            tc += 1;
-          } else {
-            Tiles.searchForTile(store, tc, grid);
-          }
-        } else {
-          tc += 1;
-          Tiles.searchForTile(store, tc, grid);
-        }
-      });
+      /**
+       * Break the loop when it reaches the stopPoint.
+       *
+       * Notes:
+       *  - stopPoint is not the end of the array
+       *  - the stopPoint controls the number of tiles to be rendered
+       *
+       */
+      if (tiles.pauseLoop(store)) {
+        Elements.renderTiles(store, tiles.getIndex(), grid.currentPoint());
+        // If more tiles to be rendered this will prevent
+        // them from being built again
+        store.rebuildAllTiles = false;
+        break;
+      }
+
 
       /**
        * Update grid array
@@ -81,30 +89,13 @@ class OptionHTML {
       grid.next(i);
 
       /**
-       * Break the loop when it reaches the stopPoint.
-       *
-       * Notes:
-       *  - stopPoint is not the end of the array
-       *  - the stopPoint controls the number of tiles to be rendered
-       *
-       */
-      if (!store.tiles[tc] || tc === store.stopPoint) {
-        Elements.renderTiles(store, tc, grid.currentPoint());
-
-        // If more tiles to be rendered this will prevent
-        // them from being built again
-        store.rebuildAllTiles = false;
-        break;
-      }
-
-      /**
        * Update grid
        *
        * if tile counter has not reached end of count and for loop
        * counter (i) is equal to or greater than this.numOfTiles
        * then a new grid row is to be crated and this.numOfTiles plus 1
        */
-      if (tc < store.stopPoint && i >= (store.tilesLength - 1)) {
+      if (tiles.getIndex(store) < store.stopPoint && i >= (store.tilesLength - 1)) {
         grid.newRowRequired();
         store.tilesLength += 1;
       }
@@ -119,6 +110,31 @@ class OptionHTML {
     grid.removeEmptyRows(rows =>
       Elements.updateContainerHeight(store, rows)
     );
+  }
+
+
+  /** Add more tiles
+   *
+   *  @param: {object} - store
+   * */
+  static addMore(store) {
+    if (store.settings.load.framerate) {
+      store.settings.load.animate = false;
+    }
+
+    if (store.loadMoreTiles) {
+      store.stopPoint += store.settings.load.index;
+    } else {
+      Elements.hideButton();
+      store.stopPoint = store.tiles.length;
+    }
+
+    store.settings.startLoop += store.settings.load.index;
+    OptionHTML.jigsawEngine(store);
+  }
+
+  static updateStopPoint({settings, elements}) {
+    return (settings.stopPoint > elements.$children.length) ? elements.$children.length : settings.stopPoint
   }
 }
 
