@@ -1,30 +1,40 @@
-import Elements from './elements';
-
+import BrowserResize from './Browser-resize';
+import DEFAULT_SETTINGS from './Settings';
+import DOMElements from './DOMElements';
+import Tiles from './Tiles';
 import Store from './Store';
-import {GridSetup} from './grid';
-import {browserResize} from './browser-resize';
-import {Tiles} from './tiles';
+import Grid from './Grid';
 
 const store = Store;
-const grid = GridSetup();
+const grid = Grid();
 const tiles = Tiles(grid);
 
-class OptionHTML {
+/* Responsive grid layouts
+ * @Class
+ */
+class Jigsaw {
+  /* Create Jigsaw
+   * @param {object} options
+   */
+  constructor(options) {
+    // copy options into settings
+    let settings = Object.assign(DEFAULT_SETTINGS, options);
+    settings.stopPoint = settings.load.index;
+    settings.eof = settings.load.index;
 
-  constructor(settings) {
-    OptionHTML.updateStore(settings);
-    OptionHTML.event();
+    Jigsaw.updateStore(settings);
+    Jigsaw.event();
   }
 
   static updateStore(settings) {
     store.settings = settings;
-    store.elements = new Elements(store);
+    store.elements = new DOMElements(store);
     store.tiles = tiles.createTileArray(store);
-    store.stopPoint = OptionHTML.updateStopPoint(store);
+    store.stopPoint = Jigsaw.updateStopPoint(store);
   }
 
   static event() {
-    const update = browserResize(store);
+    const update = BrowserResize(store);
     window.addEventListener('resize', () => update());
     setTimeout(() => {update();}, 300);
   }
@@ -32,15 +42,15 @@ class OptionHTML {
   static update(store) {
     tiles.reset(store);
     grid.setup(store);
-    OptionHTML.jigsawEngine(store);
+    Jigsaw.jigsawEngine(store);
   }
 
-  /* Calculate the position and size for each tile
+  /** Calculate the position and size for each tile
    *
    *  @param: {object} - store
    *
    *  @return: VOID
-   * */
+   */
   static jigsawEngine(store) {
     /*
      * Loop through grid to find an empty point.
@@ -60,7 +70,7 @@ class OptionHTML {
        *
        */
       if (tiles.stopPointHasLanded(store)) {
-        Elements.renderTiles(store);
+        DOMElements.renderTiles(store);
         // Do not rebuild all tiles if more tile are added, only rebuild
         // all tiles when browser is re-sized.
         store.rebuildAllTiles = false;
@@ -68,25 +78,6 @@ class OptionHTML {
       }
 
 
-      /**
-       * Update grid array
-       *
-       * tracks the position of the grid by row and column
-       * starts from left to right
-       *
-       * Example:
-       * (1) is a grid point filled
-       * (0) is a grid point is empty
-       *
-       * [[1, 1, 1, 1, 1, 1]]
-       * [[1, 1, 1, 1, 1, 1]]
-       * [[1, 1, 0, 0, 0, 0]]
-       * [[0, 0, 0, 0, 0, 0]]
-       * [[0, 0, 0, 0, 0, 0]]
-       * [[0, 0, 0, 0, 0, 0]]
-       * [[0, 0, 0, 0, 0, 0]]
-       *
-       */
       grid.nextPoint(i);
 
       /**
@@ -109,7 +100,7 @@ class OptionHTML {
      * Is used in calculation for container height.
      */
     grid.removeEmptyRows(rows =>
-      Elements.updateContainerHeight(store, rows)
+      DOMElements.updateContainerHeight(store, rows)
     );
   }
 
@@ -123,12 +114,12 @@ class OptionHTML {
     if (store.loadMoreTiles) {
       store.stopPoint += store.settings.load.index;
     } else {
-      Elements.hideButton();
+      DOMElements.hideButton();
       store.stopPoint = store.tiles.length;
     }
 
     store.settings.startLoop += store.settings.load.index;
-    OptionHTML.jigsawEngine(store);
+    Jigsaw.jigsawEngine(store);
   }
 
   static updateStopPoint({settings, elements}) {
@@ -136,4 +127,4 @@ class OptionHTML {
   }
 }
 
-export default OptionHTML;
+export default Jigsaw;

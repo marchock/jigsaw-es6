@@ -1,11 +1,31 @@
 
-export const GridSetup = () => {
+const Grid = () => {
+  /**
+   * Grid array
+   *
+   * Tracks the position of the grid by row and column
+   * starts from left to right
+   *
+   * Example:
+   * (1) is a grid point filled
+   * (0) is a grid point is empty
+   *
+   * [[1, 1, 1, 1, 1, 1]]
+   * [[1, 1, 1, 1, 1, 1]]
+   * [[1, 1, 0, 0, 0, 0]]
+   * [[0, 0, 0, 0, 0, 0]]
+   * [[0, 0, 0, 0, 0, 0]]
+   * [[0, 0, 0, 0, 0, 0]]
+   * [[0, 0, 0, 0, 0, 0]]
+   *
+   */
   let array = [];
+  let row = 0;
+  let column = 0;
   let maxGridColumns = 0;
   let maxGridRows = 0;
   let store = null;
-  let row = 0;
-  let column = 0;
+
 
   return {
 
@@ -228,3 +248,5 @@ export const GridSetup = () => {
     },
   }
 };
+
+export default Grid;

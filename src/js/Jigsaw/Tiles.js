@@ -1,5 +1,5 @@
 
-export const Tiles = (grid) => {
+const Tiles = (grid) => {
   /**
    *
    */
@@ -148,6 +148,8 @@ export const Tiles = (grid) => {
     }
   }
 };
+
+export default Tiles;
 
 /** Match tile settings to class name and return an object
  * to get the tile height and width

@@ -1,20 +1,16 @@
-/* Component: Browser Resize
- *
- * Updates container width and tracks which breakpoint the browser size fits and then passes it to the
-*/
 
-import Elements from './elements';
-import OptionHTML from './OptionHTML';
+import DOMElements from './DOMElements';
+import Jigsaw from '../jigsaw';
 import { calNumberOfColumns, resetTiles, updateTileParam } from './tiles';
 
 
-export const browserResize = (store) => {
+const BrowserResize = (store) => {
   store.container.minWidth = findSmallestBreakpointPosition(store);
   store.breakpoints.list = createBreakPointList(store);
 
   return () => {
-    // should i create an action list ?
-    store.container.width = getWidth(Elements.getContainerWidth, store);
+    // TODO: should an action list be create ?
+    store.container.width = getWidth(DOMElements.getContainerWidth, store);
     store.breakpoints.index = findBreakPointListIndex(store);
     store.maxGridColumns = calNumberOfColumns(store);
     store.tile = updateTileParam(store);
@@ -22,9 +18,11 @@ export const browserResize = (store) => {
     store.tiles = resetTiles(store.tiles);
 
     // Trigger for a new render
-    OptionHTML.update(store);
+    Jigsaw.update(store);
   }
 };
+
+export default BrowserResize;
 
 
 /** Return a list of breakpoint positions
@@ -54,6 +52,8 @@ const createBreakPointList = ({settings, container}) => {
 
 /** Find a breakpoint in the array that the container width is within the
  * boundary and return an index
+ *
+ * @param {object} store
  * @return {number}
  */
 const findBreakPointListIndex = ({breakpoints, container}) => {
@@ -65,8 +65,10 @@ const findBreakPointListIndex = ({breakpoints, container}) => {
       0);
 };
 
-
 /** Return container width no smaller than the smallest breakpoint position
+ *
+ * @param {function} func
+ * @param {object} store
  * @return {number}
  */
 const getWidth = (func, store) => {
@@ -74,8 +76,9 @@ const getWidth = (func, store) => {
   return (containerWidth > store.container.minWidth) ? containerWidth : store.container.minWidth;
 };
 
-
 /** Return the smallest breakpoint position in the array
+ *
+ * @param {object} store
  * @return {number}
  */
 const findSmallestBreakpointPosition = (store) => {

@@ -1,5 +1,4 @@
 
-
 export default {
   showGutter: false,
 
