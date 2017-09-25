@@ -13,6 +13,7 @@ class OptionHTML {
 
   constructor(settings) {
     OptionHTML.updateStore(settings);
+    OptionHTML.event();
   }
 
   static updateStore(settings) {
@@ -20,8 +21,6 @@ class OptionHTML {
     store.elements = new Elements(store);
     store.tiles = tiles.createTileArray(store);
     store.stopPoint = OptionHTML.updateStopPoint(store);
-
-    OptionHTML.event();
   }
 
   static event() {
@@ -48,7 +47,9 @@ class OptionHTML {
      */
     for (let i = 0; i < store.tilesLength; i += 1) {
 
-      grid.pointIsEmpty(tiles.addTile(store));
+      grid.pointIsEmpty(
+        tiles.addTile(store)
+      );
 
       /**
        * Break the loop when it reaches the stopPoint.
@@ -58,10 +59,10 @@ class OptionHTML {
        *  - the stopPoint controls the number of tiles to be rendered
        *
        */
-      if (tiles.pauseLoop(store)) {
-        Elements.renderTiles(store, tiles.getIndex(), grid.currentPoint());
-        // If more tiles to be rendered this will prevent
-        // them from being built again
+      if (tiles.stopPointHasLanded(store)) {
+        Elements.renderTiles(store);
+        // Do not rebuild all tiles if more tile are added, only rebuild
+        // all tiles when browser is re-sized.
         store.rebuildAllTiles = false;
         break;
       }
@@ -86,7 +87,7 @@ class OptionHTML {
        * [[0, 0, 0, 0, 0, 0]]
        *
        */
-      grid.next(i);
+      grid.nextPoint(i);
 
       /**
        * Update grid
@@ -95,7 +96,7 @@ class OptionHTML {
        * counter (i) is equal to or greater than this.numOfTiles
        * then a new grid row is to be crated and this.numOfTiles plus 1
        */
-      if (tiles.getIndex(store) < store.stopPoint && i >= (store.tilesLength - 1)) {
+      if (tiles.isGreaterThanGrid(store, i)) {
         grid.newRowRequired();
         store.tilesLength += 1;
       }
@@ -118,9 +119,6 @@ class OptionHTML {
    *  @param: {object} - store
    * */
   static addMore(store) {
-    if (store.settings.load.framerate) {
-      store.settings.load.animate = false;
-    }
 
     if (store.loadMoreTiles) {
       store.stopPoint += store.settings.load.index;

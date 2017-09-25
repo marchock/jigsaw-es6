@@ -1,30 +1,73 @@
 
 export const Tiles = (grid) => {
+  /**
+   *
+   */
   let index = 0;
 
   return {
 
+    /** Increment tiles index by plus one
+     *
+     * @return: {void}
+     */
     next() {
       index += 1;
     },
 
+    /** Reset tiles
+     *
+     * @return: {void}
+     */
     reset(store) {
       index = 0;
       store.tilesLength = calTotalNumber(store);
     },
 
+    /** Is tiles counter greater than grid counter
+     *
+     * @return: {boolean}
+     */
+    isGreaterThanGrid(store, i) {
+      return index < store.stopPoint && i >= (store.tilesLength - 1);
+    },
+
+    /** Return a tile at a specific index
+     *
+     * @return: {object}
+     */
     getTile(store) {
       return store.tiles[index];
     },
 
+    /** Return tiles index
+     *
+     * @return: {boolean}
+     */
     getIndex() {
       return index;
     },
 
-    pauseLoop(store) {
+    /** Stop point has landed stop loop
+     *
+     * @param: {object} store
+     * @return: {boolean}
+     */
+    stopPointHasLanded(store) {
       return !store.tiles[index] || index === store.stopPoint;
     },
 
+    /** Add tile
+     *
+     * 1. Is tile created
+     * 2. Is there space inside grid to fit current tile
+     * 3. Update grid points where tile will fit or search for a tile that will fit
+     * 4. Update tile parameters
+     * 5. Next
+     *
+     * @param: {object} store
+     * @return: VOID
+     */
     addTile(store) {
       return () => {
         const tile = this.getTile(store);
@@ -43,18 +86,12 @@ export const Tiles = (grid) => {
       }
     },
 
-
-
-    /** Search for a tile to fit inside grid position
+    /** Search for a tile that can fit in the current grid point
      *
-     *  @param: {object} - store
-     *  @param: {number} - index
-     *  @param: {array} - grid
-     *
-     *  @return: VOID
-     * */
+     * @param: {object} store
+     * @return: VOID
+     */
     searchForTile(store) {
-      // search for a tile to fit inside grid position row and column
       for (let i = index; i < store.stopPoint; i += 1) {
         const tile = store.tiles[i];
         if (!tile.created) {
@@ -66,16 +103,12 @@ export const Tiles = (grid) => {
       }
     },
 
-
-    /** Update tile with new parameters
+    /** Return new parameters for a tile
      *
-     *  @param: {object} - store
-     *  @param: {number} - index
-     *  @param: {number} - row
-     *  @param: {number} - column
-     *
-     *  @return: {object} - tile with updated parameters
-     * */
+     * @param: {object} store
+     * @param: {number} tileIndex
+     * @return: {object}
+     */
     updateTile(store, tileIndex) {
       // showGutter: if guttering is false then the padding
       // removed must be divided evenly across all tiles
@@ -96,10 +129,10 @@ export const Tiles = (grid) => {
       };
     },
 
-    /** Create new tiles array
+    /** Return a new tiles array
      *
-     *  @param: {object} - store
-     *  @return: {array} - tiles
+     * @param: {object} - store
+     * @return: {array} - tiles
      *
      */
     createTileArray(store) {
@@ -107,6 +140,7 @@ export const Tiles = (grid) => {
       const getClassNamesFromElements = getClassNames(settings);
       const matchTileSettingsWithClassName = matchTileSettings(settings);
 
+      // TODO: data is mutated, look for another solution
       return elements.$children
         .map(getClassNamesFromElements)
         .map(matchTileSettingsWithClassName)
@@ -118,24 +152,24 @@ export const Tiles = (grid) => {
 /** Match tile settings to class name and return an object
  * to get the tile height and width
  *
- *  @param: {object} - settings
- *  @return: {object} - tile
+ * @param: {object} - settings
+ * @return: {object} - tile
  *
  *  Currying
- **/
+ */
 const matchTileSettings = (settings) => {
   return (tile) => settings.tile
     .find(ts => ts.classname === tile);
 };
 
-
 /** Create tile object
  *
- *  @param: {object} - tile
- *  @return: {object} - tile
+ * @param: {object} - tile
+ * @return: {object} - tile
  *
  *  Currying
- **/
+ */
+
 const getClassNames = (settings) => {
   const classname = settings.classnames.tiles.replace('.', '');
 
@@ -148,9 +182,9 @@ const getClassNames = (settings) => {
 /**
  * Create tile object
  *
- *  @param: {object} - tile
- *  @return: {object} - tile
- **/
+ * @param: {object} tile
+ * @return: {object}
+ */
 const createTileObject = (tile) => {
   return {
     width: tile.w,
@@ -167,12 +201,11 @@ const createTileObject = (tile) => {
 };
 
 
-/** Update tile parameters
+/** Return tile parameters
  *
- *  @param: {object} - store
- *
- *  @return: {object} - tile parameters
- * */
+ * @param: {object} store
+ * @return: {object}
+ */
 export const updateTileParam = (store) => {
   const { tile } = store.settings.breakpoints[store.breakpoints.index];
   const clone = { ...store.tile };
@@ -191,9 +224,9 @@ export const updateTileParam = (store) => {
 
 /** Reset tiles
  *
- *  @param: {array} - tiles
- *  @return: {array} - tiles
- * */
+ * @param: {array} tiles
+ * @return: {array}
+ */
 export const resetTiles = (tiles) => {
   return tiles.map(tile => {
     tile.created = false;
@@ -204,9 +237,9 @@ export const resetTiles = (tiles) => {
 
 /** Calculates the total number of 1x1 tiles within the tiles object
  *
- *  @param: {object} - store
- *  @return: {number} - total number of tiles
- * */
+ * @param: {object} store
+ * @return: {number}
+ */
 const calTotalNumber = (store) => {
   const {stopPoint, tiles} = store;
   return Array.apply(null, {length: stopPoint})
@@ -219,8 +252,9 @@ const calTotalNumber = (store) => {
 
 /**
  *
- *  @param
- *  @return
+ * @param {object} store
+ * @param {object} grid
+ * @return {object}
  */
 const getTileParam = (store, grid) => {
   const padding = calPadding(store, grid.getMaxColumns());
@@ -231,37 +265,43 @@ const getTileParam = (store, grid) => {
   }
 };
 
-/**
+/** Calculate a tile top position
  *
- *  @param
- *  @return
+ * @param {object} store
+ * @param {number} padding
+ * @param {number} row
+ * @return {number}
  */
 const calTop = ({settings, tile}, padding, row) => {
   return settings.showGutter ? (row * tile.height) + padding : (row * (tile.height + padding));
 };
 
-/**
+/** Calculate a tile left position
  *
- *  @param
- *  @return
+ * @param {object} store
+ * @param {number} padding
+ * @param {number} column
+ * @return {number}
  */
 const calLeft = ({settings, tile}, padding, column) => {
   return settings.showGutter ? (column * tile.width) + padding : (column * (tile.width + padding));
 };
 
-/**
+/** Return a tile width
  *
- *  @param
- *  @return
+ * @param {object} store
+ * @param {number} padding
+ * @return {number}
  */
 const getTileWidth = ({settings, tile}, padding) => {
   return settings.showGutter ? tile.width : (tile.width + padding);
 };
 
-/**
+/** Return a tile height
  *
- *  @param
- *  @return
+ * @param {object} store
+ * @param {number} padding
+ * @return {number}
  */
 const getTileHeight = ({settings, tile}, padding) => {
   return settings.showGutter ? tile.height : (tile.height + padding);
@@ -269,48 +309,53 @@ const getTileHeight = ({settings, tile}, padding) => {
 
 /** Calculate a tiles width in pixels
  *
- *  @param padding: number
- *  @param tileWidth: number - a tile width in columns
- *  @param tileWidthPX: number - a tile width in pixels
- *
+ * @param {object} store
+ * @param {number} index
+ * @param {number} tileWidthPX
+ * @return {number}
  */
 const calTileWidth = ({ tiles, tile }, index, tileWidthPX) => {
   return ((tileWidthPX * tiles[index].width) - tile.padding);
 };
 
-/**
+/** Calculate a tiles height in pixels
  *
- *  @param
- *  @return
+ * @param {object} store
+ * @param {number} index
+ * @param {number} tileHeightPX
+ * @return {number}
  */
 const calTileHeight = ({ tiles, tile }, index, tileHeightPX) => {
   return (tileHeightPX * tiles[index].height) - tile.padding;
 };
 
-/**
+/** Calculate tile padding
  *
- *  @param
- *  @return
+ * @param {object} store
+ * @param {number} maxGridColumns
+ * @return {number}
  */
 const calPadding = ({ settings, tile}, maxGridColumns) => {
   return settings.showGutter ? (tile.padding / 2) : (tile.padding / maxGridColumns);
 };
 
-/**
+/** Calculate tile width by container height
  *
- *  @param
- *  @return
+ * @param {number} containerWidth
+ * @param {number} tileWidth
+ * @param {number} numOfCol
+ * @return {number}
  */
 const calTileWidthByContainerWidth = (containerWidth, tileWidth, numOfCol) => {
   return (tileWidth += Math.floor((containerWidth - (tileWidth * numOfCol)) / numOfCol));
 };
 
-/**
+/** Calculate the number of columns
  *
- *  @param
- *  @return
+ * @param {object} store
+ * @return {number}
  */
 export const calNumberOfColumns = (store) => {
   const { tile } = store.settings.breakpoints[store.breakpoints.index];
   return Math.floor(store.container.width / tile.width);
-}
+};

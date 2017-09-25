@@ -7,21 +7,46 @@ export const GridSetup = () => {
   let row = 0;
   let column = 0;
 
-
   return {
 
+    /** Setup grid
+     *
+     * @param {object} s - store
+     * @return {void}
+     */
     setup(s) {
       store = s;
       this.setupActionList().forEach(action => action());
     },
 
+    /** Create an actions list to setup the grid
+     *
+     * @return {array}
+     */
+    setupActionList() {
+      return [
+        this.reset,
+        this.calNumberOfColumns,
+        this.calMaxGridRows,
+        this.createRowsAndCols.bind(this),
+      ]
+    },
+
+    /** Reset grid
+     *
+     * @return {void}
+     */
     reset() {
       array = [];
       row = 0;
       column = 0;
     },
 
-    next(index) {
+    /** Increment to the next column or row
+     *
+     * @return {void}
+     */
+    nextPoint(index) {
       if (column < (store.maxGridColumns - 1)) {
         column += 1;
 
@@ -37,15 +62,27 @@ export const GridSetup = () => {
       }
     },
 
+    /** Calculate the number or columns required
+     *
+     * @return {void}
+     */
     calNumberOfColumns() {
       const { tile } = store.settings.breakpoints[store.breakpoints.index];
       maxGridColumns = Math.floor(store.container.width / tile.width);
     },
 
+    /** Calculate the number of rows required
+     *
+     * @return {void}
+     */
     calMaxGridRows() {
       maxGridRows = Math.round(store.tilesLength / maxGridColumns);
     },
 
+    /** Create maximum rows and columns inside the grid
+     *
+     * @return {void}
+     */
     createRowsAndCols() {
       for (let row = 0; row < maxGridRows; row += 1) {
         // if grid row does not have an array then
@@ -56,6 +93,10 @@ export const GridSetup = () => {
       }
     },
 
+    /** Update grid array that a tile will fit within a specific area
+     *
+     * @param {object} tile
+     */
     update(tile) {
       const { width, height } = tile;
 
@@ -66,27 +107,28 @@ export const GridSetup = () => {
       }
     },
 
+    /** Calculate the number of rows required
+     *
+     * @return {void}
+     */
     newRowRequired() {
       if (array.length === row) {
         this.addNewRow();
       }
     },
 
+    /** Add a new row to the grid array
+     *
+     * @return {void}
+     */
     addNewRow() {
       array[array.length] = this.createColumns(maxGridColumns);
     },
 
-    // using the forEach to run a list of
-    // functions in a specific order
-    setupActionList() {
-      return [
-        this.reset,
-        this.calNumberOfColumns,
-        this.calMaxGridRows,
-        this.createRowsAndCols.bind(this),
-      ]
-    },
-
+    /** If every column is empty then remove the row from the grid
+     *
+     * @return {boolean}
+     */
     removeEmptyRows(func) {
       const newArray = array.filter((col) => {
         return col.find((boolean => boolean));
@@ -96,36 +138,68 @@ export const GridSetup = () => {
       func(array.length);
     },
 
+    /** If grid point is empty return the callback
+     *
+     * @return {callback}
+     */
     pointIsEmpty(callback) {
       if (!array[row][column]) {
         return callback(this.hasSpaceFor.bind(this));
       }
     },
 
+    /** Return current row and column
+     *
+     * @return {object}
+     */
     currentPoint() {
       return { row, column };
     },
 
+    /** Return maximum columns
+     *
+     * @return {number}
+     */
     getMaxColumns() {
       return maxGridColumns;
     },
 
+    /** Return maximum rows
+     *
+     * @return {number}
+     */
     getMaxRows() {
       return array.length;
     },
 
+    /** Create a new row of columns
+     *
+     * @return {object}
+     */
     createColumns(columns) {
       return new Array(columns).fill(0);
     },
 
+    /** If there is a space available for a tile
+     *
+     * @return {boolean}
+     */
     isSpaceAvailable() {
       return array[row][column];
     },
 
+    /** If a there is a row available for a new tile
+     *
+     * @return {boolean}
+     */
     isRowAvailable() {
       return array[row];
     },
 
+    /** Checks if a tile can fit in the current point of the grid
+     *
+     * @return {boolean}
+     */
     hasSpaceFor(tile) {
       const { width, height } = tile;
       let spaceAvailable = 0;

@@ -3,37 +3,17 @@
 export default {
   showGutter: false,
 
-  element: null,
-
   classnames: {
       container: ".container",
       jigsaw: ".jigsaw",
-      tiles: ".item", // do not include the dot
-      formElement: ".json-form",
+      tiles: ".item",
       btnLoadMore: ".load-more"
   },
 
-  select: {
-
-      option: "html",
-
-      url: "",
-
-      filter: false,
-
-      urlEndPoint: false,
-
-      pageIndex: 1,
-
-      pageEnd: 2
-  },
 
   load: {
       btn: false,
-      scroll: false,
-      index: null,
-      animate: false,
-      framerate: null
+      index: 20,
   },
 
   breakpoints: [
@@ -72,15 +52,7 @@ export default {
 
   modifyTileHeight: 0,
 
-  cols: 0,
-
-  rows: 0,
-
-  numOfTiles: 0,
-
   stopPoint: 20,
-
-  eof: 0,
 
   startLoop: 0
 };
