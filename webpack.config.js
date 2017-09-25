@@ -10,13 +10,7 @@ module.exports = {
 	devtool: 'source-map',
 	devServer: {
 		inline: true,
-		port: 3333,
-    proxy: {
-      '/api': {
-        target: '/data/tiles.json',
-        secure: false
-      }
-    }
+		port: 3333
 	},
 	resolve: {
 		modules: [
